@@ -1,0 +1,39 @@
+module testbench;
+
+reg clk;
+reg rst;
+wire [6:0] seg;
+wire [3:0] digit;
+
+Topmodule uut(
+    .clk(clk),
+    .reset(rst),
+    .seg(seg),
+    .digit(digit)
+);
+
+always #10 clk = ~clk;
+
+initial begin
+    clk = 0;
+    rst = 0;
+
+    #20;
+    rst = 1;
+
+    #20;
+    rst = 0;
+
+    #200000;
+    $finish;
+end
+
+initial begin
+    $monitor("time=%0t rst=%b min=%0d sec=%0d",
+             $time, rst, uut.min, uut.sec);
+
+    $dumpfile("digital_clk.vcd");
+    $dumpvars(0, testbench);
+end
+
+endmodule
